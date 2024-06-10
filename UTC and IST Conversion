@@ -1,0 +1,39 @@
+from datetime import datetime, timedelta
+
+def convert_utc_to_ist(utc_time_str):
+    # Parse the input string to datetime object
+    utc_time = datetime.strptime(utc_time_str, '%Y-%m-%d %H:%M:%S')
+    
+    # IST is UTC+5:30
+    ist_offset = timedelta(hours=5, minutes=30)
+    
+    # Add the IST offset to the UTC time
+    ist_time = utc_time + ist_offset
+    
+    return ist_time.strftime('%Y-%m-%d %H:%M:%S')
+
+def convert_ist_to_utc(ist_time_str):
+    # Parse the input string to datetime object
+    ist_time = datetime.strptime(ist_time_str, '%Y-%m-%d %H:%M:%S')
+    
+    # IST is UTC+5:30
+    ist_offset = timedelta(hours=5, minutes=30)
+    
+    # Subtract the IST offset from the IST time
+    utc_time = ist_time - ist_offset
+    
+    return utc_time.strftime('%Y-%m-%d %H:%M:%S')
+
+# Get user input for conversion direction
+conversion_type = input("Enter '1' for UTC to IST conversion or '2' for IST to UTC conversion: ")
+
+if conversion_type == '1':
+    utc_time_str = input("Enter UTC time in 'YYYY-MM-DD HH:MM:SS' format: ")
+    ist_time_str = convert_utc_to_ist(utc_time_str)
+    print(f"UTC Time: {utc_time_str} -> IST Time: {ist_time_str}")
+elif conversion_type == '2':
+    ist_time_str = input("Enter IST time in 'YYYY-MM-DD HH:MM:SS' format: ")
+    utc_time_str = convert_ist_to_utc(ist_time_str)
+    print(f"IST Time: {ist_time_str} -> UTC Time: {utc_time_str}")
+else:
+    print("Invalid input. Please enter '1' or '2'.")
