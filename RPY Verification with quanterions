@@ -1,0 +1,41 @@
+import numpy as np
+
+def euler_to_quaternion(roll, pitch, yaw):
+    """
+    Convert Euler angles (roll, pitch, yaw) to a quaternion.
+    Angles are expected in degrees.
+    """
+    # Convert angles from degrees to radians
+    roll = np.radians(roll)
+    pitch = np.radians(pitch)
+    yaw = np.radians(yaw)
+    
+    # Calculate quaternion components
+    q0 = np.cos(roll/2) * np.cos(pitch/2) * np.cos(yaw/2) + np.sin(roll/2) * np.sin(pitch/2) * np.sin(yaw/2)
+    q1 = np.sin(roll/2) * np.cos(pitch/2) * np.cos(yaw/2) - np.cos(roll/2) * np.sin(pitch/2) * np.sin(yaw/2)
+    q2 = np.cos(roll/2) * np.sin(pitch/2) * np.cos(yaw/2) + np.sin(roll/2) * np.cos(pitch/2) * np.sin(yaw/2)
+    q3 = np.cos(roll/2) * np.cos(pitch/2) * np.sin(yaw/2) - np.sin(roll/2) * np.sin(pitch/2) * np.cos(yaw/2)
+    
+    return np.array([q0, q1, q2, q3])
+
+def are_quaternions_equivalent(q1, q2):
+    """
+    Check if two quaternions are equivalent.
+    """
+    return np.allclose(q1, q2) or np.allclose(q1, -q2)
+
+# User inputs
+roll1, pitch1, yaw1 = map(float, input("Enter roll1, pitch1, yaw1 (in degrees, separated by commas): ").split(','))
+roll2, pitch2, yaw2 = map(float, input("Enter roll2, pitch2, yaw2 (in degrees, separated by commas): ").split(','))
+
+# Convert Euler angles to quaternions
+quat1 = euler_to_quaternion(roll1, pitch1, yaw1)
+quat2 = euler_to_quaternion(roll2, pitch2, yaw2)
+
+# Check equivalence
+equivalent = are_quaternions_equivalent(quat1, quat2)
+
+# Output results
+print(f"Quaternion 1: {quat1}")
+print(f"Quaternion 2: {quat2}")
+print(f"Are the quaternions equivalent? {'Yes' if equivalent else 'No'}")
