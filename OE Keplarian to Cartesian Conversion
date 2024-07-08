@@ -1,0 +1,66 @@
+import numpy as np
+
+def keplerian_to_cartesian(a, e, i, RAAN, omega, nu, mu):
+    # Convert degrees to radians
+    i = np.radians(i)
+    RAAN = np.radians(RAAN)
+    omega = np.radians(omega)
+    nu = np.radians(nu)
+
+    # Step 1: Calculate distance r
+    r = (a * (1 - e**2)) / (1 + e * np.cos(nu))
+
+    # Step 2: Compute position in the orbital plane (perifocal coordinates)
+    x_orb = r * np.cos(nu)
+    y_orb = r * np.sin(nu)
+    z_orb = 0
+
+    # Step 3: Compute velocity in the orbital plane (perifocal coordinates)
+    vx_orb = -np.sqrt(mu / a) * np.sin(nu) / (1 - e**2)**0.5
+    vy_orb = np.sqrt(mu / a) * (e + np.cos(nu)) / (1 - e**2)**0.5
+    vz_orb = 0
+
+    # Perifocal position and velocity vectors
+    r_orb = np.array([x_orb, y_orb, z_orb])
+    v_orb = np.array([vx_orb, vy_orb, vz_orb])
+
+    # Rotation matrices
+    R3_omega = np.array([
+        [np.cos(-omega), np.sin(-omega), 0],
+        [-np.sin(-omega), np.cos(-omega), 0],
+        [0, 0, 1]
+    ])
+
+    R1_i = np.array([
+        [1, 0, 0],
+        [0, np.cos(-i), np.sin(-i)],
+        [0, -np.sin(-i), np.cos(-i)]
+    ])
+
+    R3_RAAN = np.array([
+        [np.cos(-RAAN), np.sin(-RAAN), 0],
+        [-np.sin(-RAAN), np.cos(-RAAN), 0],
+        [0, 0, 1]
+    ])
+
+    # Combined rotation matrix
+    rotation_matrix = R3_RAAN @ R1_i @ R3_omega
+
+    # Transform position and velocity to ECI frame
+    r_ECI = rotation_matrix @ r_orb
+    v_ECI = rotation_matrix @ v_orb
+
+    return r_ECI, v_ECI
+
+# User inputs
+a = float(input("Enter the semi-major axis (a) in km: "))
+e = float(input("Enter the eccentricity (e): "))
+i = float(input("Enter the inclination (i) in degrees: "))
+RAAN = float(input("Enter the right ascension of the ascending node (RAAN) in degrees: "))
+omega = float(input("Enter the argument of periapsis (omega) in degrees: "))
+nu = float(input("Enter the true anomaly (nu) in degrees: "))
+mu = 398600  # standard gravitational parameter for Earth in km^3/s^2
+
+r_ECI, v_ECI = keplerian_to_cartesian(a, e, i, RAAN, omega, nu, mu)
+print("Position (ECI):", r_ECI)
+print("Velocity (ECI):", v_ECI)
