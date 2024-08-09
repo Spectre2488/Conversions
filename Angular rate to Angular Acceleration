@@ -1,0 +1,28 @@
+# Function to convert angular rate data to angular acceleration
+def calculate_angular_acceleration(angular_rates):
+    angular_accelerations = []
+    for i in range(1, len(angular_rates)):
+        delta_t = (angular_rates[i]['time'] - angular_rates[i-1]['time']).total_seconds()
+        alpha_x = (angular_rates[i]['x'] - angular_rates[i-1]['x']) / delta_t
+        alpha_y = (angular_rates[i]['y'] - angular_rates[i-1]['y']) / delta_t
+        alpha_z = (angular_rates[i]['z'] - angular_rates[i-1]['z']) / delta_t
+        angular_accelerations.append({'time': angular_rates[i]['time'], 'alpha_x': alpha_x, 'alpha_y': alpha_y, 'alpha_z': alpha_z})
+    return angular_accelerations
+
+# Example input: List of angular rate data with time, x, y, z
+from datetime import datetime
+
+angular_rates = [
+    {'time': datetime.strptime("06:06:00", "%H:%M:%S"), 'x': 0.000404, 'y': -0.00124, 'z': 0.0000148},
+    {'time': datetime.strptime("06:06:30", "%H:%M:%S"), 'x': -0.000110, 'y': -0.00107, 'z': -0.0000651},
+    {'time': datetime.strptime("06:07:00", "%H:%M:%S"), 'x': -0.000618, 'y': -0.0102, 'z': 0.0212},
+    {'time': datetime.strptime("06:07:30", "%H:%M:%S"), 'x': 0.000100, 'y': -0.00404, 'z': 0.00857},
+    {'time': datetime.strptime("06:08:00", "%H:%M:%S"), 'x': 0.000195, 'y': -0.00222, 'z': 0.00549}
+]
+
+# Calculate angular accelerations
+angular_accelerations = calculate_angular_acceleration(angular_rates)
+
+# Print the angular accelerations
+for aa in angular_accelerations:
+    print(f"Time: {aa['time'].time()}, alpha_x: {aa['alpha_x']:.8f} d/s^2, alpha_y: {aa['alpha_y']:.8f} d/s^2, alpha_z: {aa['alpha_z']:.8f} d/s^2")
