@@ -1,0 +1,26 @@
+import numpy as np
+
+# Moments of inertia
+I = np.array([[10.9488, -0.0162, -0.043],
+              [-0.0162, 42.1077, -0.09198],
+              [-0.043, -0.09198, 38.1495]])
+
+# Angular rates (rad/s)
+angular_rates = np.array([[0.000404, -0.00124, 0.0000148],
+                          [-0.000110, -0.00107, -0.0000651],
+                          [-0.000618, -0.0102, 0.0212],
+                          [0.000100, -0.00404, 0.00857],
+                          [0.000195, -0.00222, 0.00549]])
+
+# Time interval (s)
+dt = 30
+
+# Calculate angular accelerations
+angular_accelerations = np.diff(angular_rates, axis=0) / dt
+
+# Calculate torques
+torques = np.dot(angular_accelerations, I)
+
+# Print torques
+for i, torque in enumerate(torques):
+    print(f"Torque at time {i*dt + dt} seconds: {torque}")
