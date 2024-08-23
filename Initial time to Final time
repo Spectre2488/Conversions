@@ -1,0 +1,20 @@
+from datetime import datetime
+
+# Define the time format
+time_format = "%H:%M:%S"
+
+# Input times
+time1 = "22:54:54"
+time2 = "22:58:07"
+
+# Convert the strings to datetime objects
+t1 = datetime.strptime(time1, time_format)
+t2 = datetime.strptime(time2, time_format)
+
+# Calculate the difference
+time_diff = t2 - t1
+
+# Extract minutes and seconds from the difference
+minutes, seconds = divmod(time_diff.total_seconds(), 60)
+
+print(f"Time difference: {int(minutes)} minutes and {int(seconds)} seconds")
