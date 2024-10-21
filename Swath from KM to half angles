@@ -1,0 +1,16 @@
+import math
+
+# Constants
+swath_width = 14  # in km
+altitude = 450    # in km
+
+# Calculate Horizontal Half Angle
+theta_h = math.atan((swath_width / 2) / altitude)
+
+# Convert to degrees
+theta_h_deg = math.degrees(theta_h)
+
+# Assume Vertical Half Angle is the same
+theta_v_deg = theta_h_deg
+
+print(theta_h_deg)
